@@ -2,6 +2,8 @@
   "id": "mod-list",
   "name": "ModList",
   "version": "0.1.0",
+  "icon": "cover.jpg",
+  "coverImageFilename": "cover.jpg",
   "author": "Lauriethefish#6700",
   "description": [
     "Allows you to easily see which mods are loaded by going to the mod settings menu."
