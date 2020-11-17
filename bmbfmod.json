@@ -1,0 +1,35 @@
+{
+  "id": "mod-list",
+  "name": "ModList",
+  "version": "0.1.0",
+  "author": "Lauriethefish#6700",
+  "description": [
+    "Allows you to easily see which mods are loaded by going to the mod settings menu."
+  ],
+  "category": "Gameplay",
+  "gameVersion": "1.13.0",
+  "platform": "Quest",
+  "components": [
+    {
+      "type": "HookMod",
+      "installAction": {
+        "installLibraryFile": "libmod-list_0_1_0.so"
+      },
+      "uninstallAction": {
+        "removeLibraryFile": "libmod-list_0_1_0.so"
+      }
+    },
+    {
+      "type": "HookModLibrary",
+      "installAction": {
+        "installLibraryFile": "libcustom-types.so"
+      }
+    },
+    {
+      "type": "HookModLibrary",
+      "installAction": {
+        "installLibraryFile": "libquestui.so"
+      }
+    }
+  ]
+}
