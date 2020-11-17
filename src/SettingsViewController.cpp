@@ -71,7 +71,10 @@ void SettingsViewController::DidActivate(bool firstActivation, bool addedToHiera
 
     // Check to see which libraries loaded/failed to load
     getLogger().info("Checking library load info.");
-    std::vector<LibraryLoadInfo> libsLoadInfo = checkLibraryLoadStatus("sdcard/Android/data/com.beatgames.beatsaber/files/libs");
+
+    // Find the path with the correct application ID
+    std::string librariesPath = string_format("sdcard/Android/data/%s/files/libs", Modloader::getApplicationId().c_str());
+    std::vector<LibraryLoadInfo> libsLoadInfo = checkLibraryLoadStatus(librariesPath);
     std::vector<ListItem> libsList;
 
     for(LibraryLoadInfo loadInfo : libsLoadInfo) {
@@ -104,9 +107,11 @@ void SettingsViewController::DidActivate(bool firstActivation, bool addedToHiera
     }
 
     // Find the info about why the libraries in the mods directory loaded/didn't load
-    std::vector<LibraryLoadInfo> modsLoadInfo = checkLibraryLoadStatus("sdcard/Android/data/com.beatgames.beatsaber/files/mods");
-    std::vector<ListItem> failedMods;
+    // Make sure to find the mods path with the correct application ID
+    std::string modsPath = string_format("sdcard/Android/data/%s/files/mods", Modloader::getApplicationId().c_str());
+    std::vector<LibraryLoadInfo> modsLoadInfo = checkLibraryLoadStatus(modsPath);
 
+    std::vector<ListItem> failedMods;
     getLogger().info("Checking for failed mods . . .");
     for(LibraryLoadInfo loadInfo : modsLoadInfo) {
         // If there was an error loading the library, add it to the list in red
