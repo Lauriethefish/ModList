@@ -59,7 +59,7 @@ void createList(UnityEngine::Transform* parent, std::string title, std::vector<L
         if(element.hoverHint != "") {
             AddHoverHint(text->get_gameObject(), element.hoverHint);
         }
-        text->set_fontSize(2.25);
+        text->set_fontSize(2.35);
     }
 }
 
