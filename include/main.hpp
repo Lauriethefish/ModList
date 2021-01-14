@@ -13,7 +13,7 @@
 
 // Define these functions here so that we can easily read configuration and log information from other files
 Configuration& getConfig();
-const Logger& getLogger();
+Logger& getLogger();
 
 // Attemps to load the SO file with the specified name, and returns if there was an error loading it
 // Useful for finding the reason that mods aren't loading.

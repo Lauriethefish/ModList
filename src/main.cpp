@@ -20,9 +20,9 @@ Configuration& getConfig() {
 }
 
 // Returns a logger, useful for printing debug messages
-const Logger& getLogger() {
-    static const Logger logger(modInfo);
-    return logger;
+Logger& getLogger() {
+    static Logger* logger = new Logger(modInfo);
+    return *logger;
 }
 
 // Called at the early stages of game loading

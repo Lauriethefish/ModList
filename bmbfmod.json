@@ -1,7 +1,7 @@
 {
   "id": "mod-list",
   "name": "ModList",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "icon": "cover.jpg",
   "coverImageFilename": "cover.jpg",
   "author": "Lauriethefish#6700",
@@ -15,10 +15,22 @@
     {
       "type": "HookMod",
       "installAction": {
-        "installLibraryFile": "libmod-list_0_1_0.so"
+        "installLibraryFile": "libmod-list.so"
       },
       "uninstallAction": {
-        "removeLibraryFile": "libmod-list_0_1_0.so"
+        "removeLibraryFile": "libmod-list.so"
+      }
+    },
+    {
+      "type": "HookModLibrary",
+      "installAction": {
+        "installLibraryFile": "libbeatsaber-hook_1_0_9.so"
+      }
+    },
+    {
+      "type": "HookModLibrary",
+      "installAction": {
+        "installLibraryFile": "libcodegen_0_5_3.so"
       }
     },
     {
