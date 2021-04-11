@@ -14,15 +14,3 @@
 // Define these functions here so that we can easily read configuration and log information from other files
 Configuration& getConfig();
 Logger& getLogger();
-
-// Attemps to load the SO file with the specified name, and returns if there was an error loading it
-// Useful for finding the reason that mods aren't loading.
-std::optional<std::string> tryLoadingLibrary(std::string name);
-
-struct LibraryLoadInfo {
-    std::string libraryName;
-    std::optional<std::string> errorMessage = std::nullopt;
-};
-
-// Attempts to load all of the libraries in the folder path, and returns if there were any errors
-std::vector<LibraryLoadInfo> checkLibraryLoadStatus(std::string path);

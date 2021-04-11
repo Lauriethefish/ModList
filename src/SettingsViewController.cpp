@@ -1,3 +1,9 @@
+
+#include "SettingsViewController.hpp"
+#include "main.hpp"
+#include "library_utils.hpp"
+using namespace ModList;
+
 #include "UnityEngine/Transform.hpp"
 #include "UnityEngine/UI/VerticalLayoutGroup.hpp"
 #include "UnityEngine/UI/HorizontalLayoutGroup.hpp"
@@ -14,10 +20,6 @@ using namespace QuestUI::BeatSaberUI;
 
 #include "modloader/shared/modloader.hpp"
 
-#include "main.hpp"
-#include "SettingsViewController.hpp"
-using namespace ModList;
-
 DEFINE_TYPE(SettingsViewController);
 
 struct ListItem {
@@ -25,7 +27,7 @@ struct ListItem {
     std::string hoverHint;
 };
 
-void createList(UnityEngine::Transform* parent, std::string title, std::vector<ListItem> content) {
+void CreateListWithTitle(UnityEngine::Transform* parent, std::string title, std::vector<ListItem> content) {
     VerticalLayoutGroup* layout = CreateVerticalLayoutGroup(parent);
     layout->set_spacing(0.5);
 
@@ -78,24 +80,24 @@ void SettingsViewController::DidActivate(bool firstActivation, bool addedToHiera
     getLogger().info("Checking library load info.");
 
     // Find the path with the correct application ID
-    std::string librariesPath = string_format("sdcard/Android/data/%s/files/libs", Modloader::getApplicationId().c_str());
-    std::vector<LibraryLoadInfo> libsLoadInfo = checkLibraryLoadStatus(librariesPath);
-    std::vector<ListItem> libsList;
+    std::string librariesPath = string_format("/sdcard/Android/data/%s/files/libs", Modloader::getApplicationId().c_str());
+    std::vector<LibraryLoadInfo> libraryLoadInfo = AttemptLoadLibraries(librariesPath);
+    std::vector<ListItem> librariesList;
 
-    for(LibraryLoadInfo loadInfo : libsLoadInfo) {
+    for(LibraryLoadInfo loadInfo : libraryLoadInfo) {
         if(loadInfo.errorMessage.has_value()) {
             // If there was an error loading the library, display it in red
             getLogger().debug("Adding failed library " + loadInfo.libraryName);
             ListItem item;
             item.content = "<color=red>" + loadInfo.libraryName + " (failed)";
             item.hoverHint = *loadInfo.errorMessage; // Allow you to hover over the mod to see the fail reason
-            libsList.push_back(item);
+            librariesList.push_back(item);
         }   else    {
             // Otherwise, make the library name green
             getLogger().debug("Adding successful library " + loadInfo.libraryName);
             ListItem item;
             item.content = "<color=green>" + loadInfo.libraryName;
-            libsList.push_back(item);
+            librariesList.push_back(item);
         }
         
     }
@@ -114,7 +116,7 @@ void SettingsViewController::DidActivate(bool firstActivation, bool addedToHiera
     // Find the info about why the libraries in the mods directory loaded/didn't load
     // Make sure to find the mods path with the correct application ID
     std::string modsPath = string_format("sdcard/Android/data/%s/files/mods", Modloader::getApplicationId().c_str());
-    std::vector<LibraryLoadInfo> modsLoadInfo = checkLibraryLoadStatus(modsPath);
+    std::vector<LibraryLoadInfo> modsLoadInfo = AttemptLoadLibraries(modsPath);
 
     std::vector<ListItem> failedMods;
     getLogger().info("Checking for failed mods . . .");
@@ -130,7 +132,7 @@ void SettingsViewController::DidActivate(bool firstActivation, bool addedToHiera
     }
 
     // Create lists for each group
-    createList(mainLayout->get_rectTransform(), "Loaded Mods", loadedMods);
-    createList(mainLayout->get_rectTransform(), "Failed Mods", failedMods);
-    createList(mainLayout->get_rectTransform(), "Libraries", libsList);
+    CreateListWithTitle(mainLayout->get_rectTransform(), "Loaded Mods", loadedMods);
+    CreateListWithTitle(mainLayout->get_rectTransform(), "Failed Mods", failedMods);
+    CreateListWithTitle(mainLayout->get_rectTransform(), "Libraries", librariesList);
 }
