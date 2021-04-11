@@ -40,12 +40,8 @@ void CreateListWithTitle(UnityEngine::Transform* parent, std::string title, std:
     // Create a layout for the list itself
     VerticalLayoutGroup* listLayout = CreateVerticalLayoutGroup(layout->get_rectTransform());
     listLayout->GetComponent<LayoutElement*>()->set_minWidth(25.0); // Make sure the list has a set width.
-    listLayout->GetComponent<LayoutElement*>()->set_minHeight(80.0); // Make sure the list takes up most of the space
+    listLayout->GetComponent<LayoutElement*>()->set_minHeight(60.0); // Make sure the list takes up most of the space
 
-    // Removed, ScrollView does not support Backgroundable
-    // Make both the sections have a nice panel background
-    //titleLayout->get_gameObject()->AddComponent<QuestUI::Backgroundable*>()->ApplyBackground(il2cpp_utils::createcsstr("round-rect-panel"));
-    //listLayout->get_gameObject()->AddComponent<QuestUI::Backgroundable*>()->ApplyBackground(il2cpp_utils::createcsstr("round-rect-panel"));
     
     // Add some padding so that the messages aren't totally squished
     titleLayout->set_padding(UnityEngine::RectOffset::New_ctor(1, 1, 1, 1));
