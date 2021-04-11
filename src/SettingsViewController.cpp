@@ -18,7 +18,7 @@ using namespace QuestUI::BeatSaberUI;
 #include "SettingsViewController.hpp"
 using namespace ModList;
 
-DEFINE_CLASS(SettingsViewController);
+DEFINE_TYPE(SettingsViewController);
 
 struct ListItem {
     std::string content;
