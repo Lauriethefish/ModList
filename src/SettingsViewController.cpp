@@ -20,7 +20,7 @@ using namespace QuestUI::BeatSaberUI;
 
 #include "modloader/shared/modloader.hpp"
 
-DEFINE_TYPE(SettingsViewController);
+DEFINE_TYPE(ModList, SettingsViewController);
 
 struct ListItem {
     std::string content;
@@ -83,14 +83,14 @@ void SettingsViewController::DidActivate(bool firstActivation, bool addedToHiera
     for(LibraryLoadInfo loadInfo : libraryLoadInfo) {
         if(loadInfo.errorMessage.has_value()) {
             // If there was an error loading the library, display it in red
-            getLogger().debug("Adding failed library " + loadInfo.libraryName);
+            getLogger().debug("Adding failed library %s", loadInfo.libraryName.c_str());
             ListItem item;
             item.content = "<color=red>" + loadInfo.libraryName + " (failed)";
             item.hoverHint = *loadInfo.errorMessage; // Allow you to hover over the mod to see the fail reason
             librariesList.push_back(item);
         }   else    {
             // Otherwise, make the library name green
-            getLogger().debug("Adding successful library " + loadInfo.libraryName);
+            getLogger().debug("Adding successful library %s", loadInfo.libraryName.c_str());
             ListItem item;
             item.content = "<color=green>" + loadInfo.libraryName;
             librariesList.push_back(item);
@@ -103,7 +103,7 @@ void SettingsViewController::DidActivate(bool firstActivation, bool addedToHiera
     std::vector<ListItem> loadedMods;
     for(const std::pair<std::string, const Mod>& modEntry : Modloader::getMods()) {
         const Mod& mod = modEntry.second;
-        getLogger().info("Adding mod " + mod.info.id);
+        getLogger().info("Adding mod %s", mod.info.id.c_str());
         ListItem item;
         item.content = "<color=green>" + mod.info.id + "</color><color=white> v" + mod.info.version;
         loadedMods.push_back(item);
@@ -119,7 +119,7 @@ void SettingsViewController::DidActivate(bool firstActivation, bool addedToHiera
     for(LibraryLoadInfo loadInfo : modsLoadInfo) {
         // If there was an error loading the library, add it to the list in red
         if(loadInfo.errorMessage.has_value()) {
-            getLogger().debug("Adding failed mod " + loadInfo.libraryName);
+            getLogger().debug("Adding failed mod %s", loadInfo.libraryName.c_str());
             ListItem item;
             item.content = "<color=red>" + loadInfo.libraryName + " (failed)";
             item.hoverHint = *loadInfo.errorMessage; // Allow you to hover over the mod to see the fail reason

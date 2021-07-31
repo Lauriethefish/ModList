@@ -15,18 +15,20 @@ std::optional<std::string> AttemptLoadLibrary(std::string path) {
 }
 
 std::vector<LibraryLoadInfo> AttemptLoadLibraries(std::string path) {
-    getLogger().info("Checking for libraries in path: " + path);
+    getLogger().info("Checking for libraries in path: %s", path.c_str());
     std::vector<LibraryLoadInfo> result;
+
+    std::string modloaderDestinationPath = Modloader::getDestinationPath();
 
     struct dirent* dp;
     DIR* dir = opendir(path.c_str());
     while ((dp = readdir(dir)) != nullptr) { // Loop through all files until we run out
         // Find all of the files that end in .so
         if (strlen(dp->d_name) > 3 && !strcmp(dp->d_name + strlen(dp->d_name) - 3, ".so")) {        
-            getLogger().debug("Checking library " + std::string(dp->d_name));
+            getLogger().debug("Checking library %s", dp->d_name);
 
             // Make sure to use the modloader's temporary directory with the correct application ID
-            std::string libraryPath = string_format("data/data/%s/%s", Modloader::getApplicationId().c_str(), dp->d_name);
+            std::string libraryPath = modloaderDestinationPath + dp->d_name;
             std::optional<std::string> failReason = AttemptLoadLibrary(libraryPath);
 
             // Add the load info to the vector

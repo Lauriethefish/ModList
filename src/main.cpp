@@ -38,7 +38,7 @@ extern "C" void load() {
 
     // Register our mod settings menu
     QuestUI::Init();
-    custom_types::Register::RegisterType<SettingsViewController>();
+    custom_types::Register::AutoRegister();
     QuestUI::Register::RegisterModSettingsViewController<SettingsViewController*>(modInfo);
 
     getLogger().info("Installing hooks...");
