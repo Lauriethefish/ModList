@@ -76,8 +76,7 @@ void SettingsViewController::DidActivate(bool firstActivation, bool addedToHiera
     getLogger().info("Checking library load info.");
 
     // Find the path with the correct application ID
-    std::string librariesPath = string_format("/sdcard/Android/data/%s/files/libs", Modloader::getApplicationId().c_str());
-    LibraryLoadInfo libraryLoadInfo = AttemptLoadLibraries(librariesPath);
+    LibraryLoadInfo& libraryLoadInfo = GetModloaderLibsLoadInfo();
     std::vector<ListItem> librariesList;
 
     for(std::pair<std::string, std::optional<std::string>> libraryLoadPair : libraryLoadInfo) {
@@ -111,8 +110,7 @@ void SettingsViewController::DidActivate(bool firstActivation, bool addedToHiera
 
     // Find the info about why the libraries in the mods directory loaded/didn't load
     // Make sure to find the mods path with the correct application ID
-    std::string modsPath = string_format("sdcard/Android/data/%s/files/mods", Modloader::getApplicationId().c_str());
-    LibraryLoadInfo modsLoadInfo = AttemptLoadLibraries(modsPath);
+    LibraryLoadInfo& modsLoadInfo = GetModsLoadInfo();
 
     std::vector<ListItem> failedMods;
     getLogger().info("Checking for failed mods . . .");

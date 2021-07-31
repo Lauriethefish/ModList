@@ -25,4 +25,4 @@ LibraryLoadInfo& GetModloaderLibsLoadInfo();
 
 // Gets the mods that failed to load in this instance of the game running
 // Keys are mod SO file names (with .so included), values are fail reasons (or nullopt if loading was successful)
-LibraryLoadInfo& GetFailedMods();
+LibraryLoadInfo& GetModsLoadInfo();

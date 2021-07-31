@@ -1,11 +1,30 @@
 #include "main.hpp"
+#include "library_utils.hpp"
+
 #include "SettingsViewController.hpp"
 using namespace ModList;
 
 #include "custom-types/shared/register.hpp"
 #include "questui/shared/QuestUI.hpp"
+#include "questui/shared/BeatSaberUI.hpp"
+using namespace QuestUI;
 
 #include "beatsaber-hook/shared/utils/utils-functions.h"
+
+#include "GlobalNamespace/MainMenuViewController.hpp"
+using namespace GlobalNamespace;
+
+#include "UnityEngine/Transform.hpp"
+#include "UnityEngine/UI/VerticalLayoutGroup.hpp"
+#include "UnityEngine/UI/HorizontalLayoutGroup.hpp"
+#include "UnityEngine/UI/LayoutElement.hpp"
+#include "UnityEngine/RectOffset.hpp"
+#include "UnityEngine/TextAnchor.hpp"
+using namespace UnityEngine::UI;
+
+#include "TMPro/TextMeshProUGUI.hpp"
+#include "TMPro/TextAlignmentOptions.hpp"
+using namespace TMPro;
 
 static ModInfo modInfo; // Stores the ID and version of our mod, and is sent to the modloader upon startup
 
@@ -20,6 +39,69 @@ Configuration& getConfig() {
 Logger& getLogger() {
     static Logger* logger = new Logger(modInfo);
     return *logger;
+}
+
+// Displays a modal view if mods fail to load showing why
+// TODO: Add disable option
+MAKE_HOOK_MATCH(MainMenuViewController_DidActivate, &MainMenuViewController::DidActivate, void, MainMenuViewController* self, bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling) {
+    MainMenuViewController_DidActivate(self, firstActivation, addedToHierarchy, screenSystemEnabling);
+
+    getLogger().info("MainMenuViewController_DidActivate, checking for failed mods");
+
+    LibraryLoadInfo& modsLoadInfo = GetModsLoadInfo();
+
+    std::unordered_map<std::string, std::string> failedMods;
+    for(std::pair<std::string, std::optional<std::string>> modPair : modsLoadInfo) {
+        if(modPair.second.has_value()) {
+            failedMods[modPair.first] = *modPair.second;
+        }
+    }
+
+    getLogger().info("%lu mods failed to load", failedMods.size());
+    if(failedMods.size() == 0) {
+        getLogger().info("All mods loaded successfully, not showing fail dialog");
+        return;
+    }
+
+    getLogger().info("Constructing fail dialog . . .");
+
+    HMUI::ModalView* modalView = BeatSaberUI::CreateModal(self->get_transform(), UnityEngine::Vector2(70.0f, 70.0f), nullptr);
+    UnityEngine::Transform* modalTransform = modalView->get_transform();
+    VerticalLayoutGroup* layout = BeatSaberUI::CreateVerticalLayoutGroup(modalTransform);
+    UnityEngine::RectTransform* layoutTransform = layout->get_rectTransform();
+
+    layout->set_padding(UnityEngine::RectOffset::New_ctor(2, 2, 4, 4));
+    layout->set_childAlignment(UnityEngine::TextAnchor::UpperLeft);
+    layout->set_childControlHeight(true);
+    layout->set_childForceExpandHeight(false);
+    layout->set_childControlWidth(false);
+    layout->set_childForceExpandWidth(true);
+
+    std::string failedModsText;
+    // Make sure to adjust for the plural!
+    if(failedMods.size() > 1) {
+        failedModsText = string_format("%lu mods failed to load!", failedMods.size());
+    }   else    {
+        failedModsText = string_format("%lu mod failed to load!", failedMods.size());
+    }
+
+    TextMeshProUGUI* titleText = BeatSaberUI::CreateText(layoutTransform, failedModsText);
+    titleText->set_fontSize(5.0f);
+    titleText->set_alignment(TextAlignmentOptions::TopLeft);
+
+    BeatSaberUI::CreateText(layoutTransform, "_______________________________");
+
+    // Add the failed mods to the GUI
+    for(std::pair<std::string, std::string> failedMod : failedMods) {
+        TextMeshProUGUI* modText = BeatSaberUI::CreateText(layoutTransform, string_format("<color=red>%s</color>: %s", failedMod.first.c_str(), failedMod.second.c_str()));
+        modText->set_overflowMode(TextOverflowModes::Ellipsis);
+        modText->set_fontSize(3.5f);
+
+        BeatSaberUI::AddHoverHint(modText->get_gameObject(), failedMod.second); // Show the full fail reason in a hover hint, since there most likely won't be enough space in the modal view
+    }
+
+    getLogger().info("Showing fail dialog . . .");
+    modalView->Show(true, false, nullptr);
 }
 
 // Called at the early stages of game loading
@@ -42,6 +124,6 @@ extern "C" void load() {
     QuestUI::Register::RegisterModSettingsViewController<SettingsViewController*>(modInfo);
 
     getLogger().info("Installing hooks...");
-    // Install our hooks (none defined yet)
+    INSTALL_HOOK(getLogger(), MainMenuViewController_DidActivate);
     getLogger().info("Installed all hooks!");
 }

@@ -53,7 +53,7 @@ LibraryLoadInfo& GetModloaderLibsLoadInfo() {
     return *failedLibraries;
 }
 
-LibraryLoadInfo& GetFailedMods() {
+LibraryLoadInfo& GetModsLoadInfo() {
     static std::string modsPath = string_format("sdcard/Android/data/%s/files/mods", Modloader::getApplicationId().c_str());
     
     if(!failedMods.has_value()) {
