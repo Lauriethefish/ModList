@@ -14,9 +14,9 @@ std::optional<std::string> AttemptLoadLibrary(std::string path) {
     return error ? std::optional(std::string(error)) : std::nullopt;
 }
 
-std::vector<LibraryLoadInfo> AttemptLoadLibraries(std::string path) {
+std::unordered_map<std::string, std::optional<std::string>> AttemptLoadLibraries(std::string path) {
     getLogger().info("Checking for libraries in path: %s", path.c_str());
-    std::vector<LibraryLoadInfo> result;
+    std::unordered_map<std::string, std::optional<std::string>> result;
 
     std::string modloaderDestinationPath = Modloader::getDestinationPath();
 
@@ -31,14 +31,35 @@ std::vector<LibraryLoadInfo> AttemptLoadLibraries(std::string path) {
             std::string libraryPath = modloaderDestinationPath + dp->d_name;
             std::optional<std::string> failReason = AttemptLoadLibrary(libraryPath);
 
-            // Add the load info to the vector
-            LibraryLoadInfo loadInfo;
-            loadInfo.libraryName = dp->d_name;
-            loadInfo.errorMessage = failReason;
-            result.push_back(loadInfo);
+            // Add the load info to the map
+            result[dp->d_name] = failReason;
         }
     }
     closedir(dir); // Make sure to close the directory afterwards
 
     return result;
 }
+
+static std::optional<LibraryLoadInfo> failedLibraries;
+static std::optional<LibraryLoadInfo> failedMods;
+
+LibraryLoadInfo& GetModloaderLibsLoadInfo() {
+    static std::string libsPath = string_format("sdcard/Android/data/%s/files/libs", Modloader::getApplicationId().c_str());
+    
+    if(!failedLibraries.has_value()) {
+        failedLibraries = AttemptLoadLibraries(libsPath);
+    }
+
+    return *failedLibraries;
+}
+
+LibraryLoadInfo& GetFailedMods() {
+    static std::string modsPath = string_format("sdcard/Android/data/%s/files/mods", Modloader::getApplicationId().c_str());
+    
+    if(!failedMods.has_value()) {
+        failedMods.emplace(AttemptLoadLibraries(modsPath));
+    }
+
+    return *failedMods;
+}
+
