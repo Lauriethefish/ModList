@@ -18,6 +18,9 @@ using namespace UnityEngine::UI;
 #include "questui/shared/CustomTypes/Components/Backgroundable.hpp"
 using namespace QuestUI::BeatSaberUI;
 
+#include "TMPro/TextMeshProUGUI.hpp"
+using namespace TMPro;
+
 #include "modloader/shared/modloader.hpp"
 
 DEFINE_TYPE(ModList, SettingsViewController);
@@ -40,11 +43,11 @@ void CreateListWithTitle(UnityEngine::Transform* parent, std::string title, std:
     // Create a layout for the list itself
     VerticalLayoutGroup* listLayout = CreateVerticalLayoutGroup(layout->get_rectTransform());
     listLayout->GetComponent<LayoutElement*>()->set_minWidth(25.0); // Make sure the list has a set width.
-    listLayout->GetComponent<LayoutElement*>()->set_minHeight(60.0); // Make sure the list takes up most of the space
+    listLayout->GetComponent<LayoutElement*>()->set_minHeight(40.0); // Make sure the list takes up most of the space
 
     
     // Add some padding so that the messages aren't totally squished
-    titleLayout->set_padding(UnityEngine::RectOffset::New_ctor(1, 1, 1, 1));
+    titleLayout->set_padding(UnityEngine::RectOffset::New_ctor(1, 1, 0, 0));
     listLayout->set_padding(UnityEngine::RectOffset::New_ctor(1, 1, 1, 1));
 
     // Make sure the list items are in the top left
@@ -68,6 +71,13 @@ void SettingsViewController::DidActivate(bool firstActivation, bool addedToHiera
 
     // Allow the lists to be scrolled
     UnityEngine::GameObject* scrollView = CreateScrollableSettingsContainer(get_rectTransform());
+
+    CreateToggle(scrollView->get_transform(), "Show failed mods in main menu", getConfig().config["showFailedModsOnGameStart"].GetBool(), [](bool newValue){
+        getConfig().config["showFailedModsOnGameStart"] = newValue;
+        getConfig().Write(); // Save the config
+    });
+    TextMeshProUGUI* dividerText = CreateText(scrollView->get_transform(), "_____________________________________________");
+    dividerText->set_alignment(TextAlignmentOptions::Center);
 
     HorizontalLayoutGroup* mainLayout = CreateHorizontalLayoutGroup(scrollView->get_transform());
     mainLayout->set_childAlignment(UnityEngine::TextAnchor::MiddleCenter); // The lists should be centred

@@ -31,7 +31,6 @@ static ModInfo modInfo; // Stores the ID and version of our mod, and is sent to 
 // Loads the config from disk using our modInfo, then returns it for use
 Configuration& getConfig() {
     static Configuration config(modInfo);
-    config.Load();
     return config;
 }
 
@@ -42,12 +41,21 @@ Logger& getLogger() {
 }
 
 // Displays a modal view if mods fail to load showing why
-// TODO: Add disable option
 MAKE_HOOK_MATCH(MainMenuViewController_DidActivate, &MainMenuViewController::DidActivate, void, MainMenuViewController* self, bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling) {
     MainMenuViewController_DidActivate(self, firstActivation, addedToHierarchy, screenSystemEnabling);
 
-    getLogger().info("MainMenuViewController_DidActivate, checking for failed mods");
+    getLogger().info("MainMenuViewController_DidActivate");
+    if(!firstActivation) {
+        getLogger().info("Not first activation, not displaying modal");
+        return;
+    }
 
+    if(!getConfig().config["showFailedModsOnGameStart"].GetBool()) {
+        getLogger().info("Showing failed mods on game start is disabled! Returning");
+        return;
+    }
+
+    getLogger().info("Checking for failed mods . . .");
     LibraryLoadInfo& modsLoadInfo = GetModsLoadInfo();
 
     std::unordered_map<std::string, std::string> failedMods;
@@ -65,7 +73,10 @@ MAKE_HOOK_MATCH(MainMenuViewController_DidActivate, &MainMenuViewController::Did
 
     getLogger().info("Constructing fail dialog . . .");
 
-    HMUI::ModalView* modalView = BeatSaberUI::CreateModal(self->get_transform(), UnityEngine::Vector2(70.0f, 70.0f), nullptr);
+    HMUI::ModalView* modalView = BeatSaberUI::CreateModal(self->get_transform(), UnityEngine::Vector2(70.0f, 70.0f), [](HMUI::ModalView* modalView){
+        getLogger().info("Fail dialog closed, destroying modal view!");
+        UnityEngine::GameObject::Destroy(modalView->get_gameObject());
+    });
     UnityEngine::Transform* modalTransform = modalView->get_transform();
     VerticalLayoutGroup* layout = BeatSaberUI::CreateVerticalLayoutGroup(modalTransform);
     UnityEngine::RectTransform* layoutTransform = layout->get_rectTransform();
@@ -104,6 +115,15 @@ MAKE_HOOK_MATCH(MainMenuViewController_DidActivate, &MainMenuViewController::Did
     modalView->Show(true, false, nullptr);
 }
 
+void ConstructConfig() {
+    ConfigDocument& config = getConfig().config;
+    auto& alloc = config.GetAllocator();
+    if(!config.HasMember("showFailedModsOnGameStart")) {
+        config.AddMember("showFailedModsOnGameStart", true, alloc);
+        getConfig().Write();
+    }
+}
+
 // Called at the early stages of game loading
 extern "C" void setup(ModInfo& info) {
     info.id = ID;
@@ -111,6 +131,8 @@ extern "C" void setup(ModInfo& info) {
     modInfo = info;
 	
     getConfig().Load(); // Load the config file
+    ConstructConfig(); // Add properties to the config if missing
+
     getLogger().info("Completed setup!");
 }
 
