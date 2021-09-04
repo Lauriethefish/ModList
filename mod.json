@@ -6,12 +6,12 @@
     "author": "Lauriethefish",
     "version": "0.1.3",
     "packageId": "com.beatgames.beatsaber",
-    "packageVersion": "1.16.4",
+    "packageVersion": "1.17.0",
     "coverImage": "cover.png",
     "modFiles": [
         "libmod-list.so"
     ],
     "libraryFiles": [
-        "libbeatsaber-hook_2_2_5.so"
+        "libbeatsaber-hook_2_3_0.so"
     ]
 }
