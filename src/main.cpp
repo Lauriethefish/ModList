@@ -2,6 +2,7 @@
 #include "library_utils.hpp"
 
 #include "SettingsViewController.hpp"
+#include "ModListViewController.hpp"
 using namespace ModList;
 
 #include "custom-types/shared/register.hpp"
@@ -143,7 +144,8 @@ extern "C" void load() {
     // Register our mod settings menu
     QuestUI::Init();
     custom_types::Register::AutoRegister();
-    QuestUI::Register::RegisterMainMenuModSettingsViewController<SettingsViewController*>(modInfo, "Loaded Mods");
+    QuestUI::Register::RegisterMainMenuModSettingsViewController<ModListViewController*>(modInfo, "Loaded Mods");
+    QuestUI::Register::RegisterModSettingsViewController<SettingsViewController*>(modInfo, "Mod List Settings");
 
     getLogger().info("Installing hooks...");
     INSTALL_HOOK(getLogger(), MainMenuViewController_DidActivate);
