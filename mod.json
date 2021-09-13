@@ -7,6 +7,7 @@
     "version": "0.1.4",
     "packageId": "com.beatgames.beatsaber",
     "packageVersion": "1.17.1",
+    "description": "Displays your installed mods inside the game and gives you a warning prompt upon starting the game to tell you if a mod failed to load.",
     "coverImage": "cover.png",
     "modFiles": [
         "libmod-list.so"
