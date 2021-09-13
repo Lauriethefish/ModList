@@ -4,9 +4,9 @@
     "name": "Mod List",
     "id": "mod-list",
     "author": "Lauriethefish",
-    "version": "0.1.3",
+    "version": "0.1.4",
     "packageId": "com.beatgames.beatsaber",
-    "packageVersion": "1.17.0",
+    "packageVersion": "1.17.1",
     "coverImage": "cover.png",
     "modFiles": [
         "libmod-list.so"
