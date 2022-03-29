@@ -7,7 +7,9 @@
     "version": "0.1.5",
     "url": null,
     "additionalData": {
-      "overrideSoName": "libmod-list.so"
+      "overrideSoName": "libmod-list.so",
+      "modLink": "https://github.com/Lauriethefish/ModList/releases/download/v0.1.5/ModList.qmod",
+      "branchName": "version-v0.1.5"
     }
   },
   "dependencies": [
