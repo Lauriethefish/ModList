@@ -9,10 +9,6 @@
     "packageVersion": "1.17.1",
     "description": "Displays your installed mods inside the game and gives you a warning prompt upon starting the game to tell you if a mod failed to load.",
     "coverImage": "cover.png",
-    "modFiles": [
-        "libmod-list.so"
-    ],
-    "libraryFiles": [
-        "libbeatsaber-hook_2_3_0.so"
-    ]
+    "modFiles": [],
+    "libraryFiles": []
 }
