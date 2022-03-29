@@ -49,7 +49,7 @@ Android.mk.backup
 qpm.shared.json
 extern.cmake
 qpm_defines.cmake
-mod.template.json
+mod.json
 *.log
 build/
 
