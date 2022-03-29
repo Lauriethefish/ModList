@@ -52,5 +52,6 @@ qpm_defines.cmake
 mod.template.json
 *.log
 build/
+
 # QuestPatcher mods
 *.qmod
