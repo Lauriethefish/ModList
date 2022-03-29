@@ -1,8 +1,32 @@
-$NDKPath = Get-Content $PSScriptRoot/ndkpath.txt
+Param(
+    [Parameter(Mandatory=$false)]
+    [Switch]$clean,
+    [Parameter(Mandatory=$false)]
+    [Switch]$release
+)
 
-$buildScript = "$NDKPath/build/ndk-build"
-if (-not ($PSVersionTable.PSEdition -eq "Core")) {
-    $buildScript += ".cmd"
+# if user specified clean, remove all build files
+if ($clean.IsPresent)
+{
+    if (Test-Path -Path "build")
+    {
+        remove-item build -R
+    }
 }
 
-& $buildScript NDK_PROJECT_PATH=$PSScriptRoot APP_BUILD_SCRIPT=$PSScriptRoot/Android.mk NDK_APPLICATION_MK=$PSScriptRoot/Application.mk
+if (($clean.IsPresent) -or (-not (Test-Path -Path "build")))
+{
+    $out = new-item -Path build -ItemType Directory
+}
+
+$buildType = "Debug"
+if ($release.IsPresent) {
+    $buildType = "RelWithDebInfo"
+}
+
+cd build
+& cmake -G "Ninja" -DCMAKE_BUILD_TYPE="$buildType" ../
+& cmake --build .
+$ExitCode = $LastExitCode
+cd ..
+exit $ExitCode

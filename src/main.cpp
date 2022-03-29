@@ -127,7 +127,7 @@ void ConstructConfig() {
 
 // Called at the early stages of game loading
 extern "C" void setup(ModInfo& info) {
-    info.id = ID;
+    info.id = MOD_ID;
     info.version = VERSION;
     modInfo = info;
 	

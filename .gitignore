@@ -47,6 +47,10 @@ ndkpath.txt
 extern/
 Android.mk.backup
 qpm.shared.json
-
+extern.cmake
+qpm_defines.cmake
+mod.template.json
+*.log
+build/
 # QuestPatcher mods
 *.qmod
