@@ -6,12 +6,14 @@
     "id": "mod-list",
     "version": "0.1.4",
     "url": null,
-    "additionalData": {}
+    "additionalData": {
+      "overrideSoName": "libmod-list.so"
+    }
   },
   "dependencies": [
     {
       "id": "beatsaber-hook",
-      "versionRange": "*",
+      "versionRange": "^3.7.4",
       "additionalData": {
         "extraFiles": [
           "src/inline-hook"
@@ -20,17 +22,27 @@
     },
     {
       "id": "codegen",
-      "versionRange": "*",
+      "versionRange": "^0.21.0",
       "additionalData": {}
     },
     {
       "id": "questui",
-      "versionRange": "*",
+      "versionRange": "^0.13.4",
       "additionalData": {}
     },
     {
       "id": "custom-types",
-      "versionRange": "*",
+      "versionRange": "^0.15.8",
+      "additionalData": {}
+    },
+    {
+      "id": "modloader",
+      "versionRange": "^1.2.3",
+      "additionalData": {}
+    },
+    {
+      "id": "libil2cpp",
+      "versionRange": "^0.2.3",
       "additionalData": {}
     }
   ],

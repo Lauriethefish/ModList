@@ -1,10 +1,24 @@
-$NDKPath = Get-Content $PSScriptRoot/ndkpath.txt
+param (
+    [Parameter(Mandatory=$false)]
+    [Switch]$debug_so,
+    [Parameter(Mandatory=$false)]
+    [Switch]$log
+)
 
-$buildScript = "$NDKPath/build/ndk-build"
-if (-not ($PSVersionTable.PSEdition -eq "Core")) {
-    $buildScript += ".cmd"
+& ./build.ps1
+if (-not ($LastExitCode -eq 0)) {
+    echo "build failed, not copying"
+    exit
 }
 
-& $buildScript NDK_PROJECT_PATH=$PSScriptRoot APP_BUILD_SCRIPT=$PSScriptRoot/Android.mk NDK_APPLICATION_MK=$PSScriptRoot/Application.mk
-& adb push libs/arm64-v8a/libmod-list.so /sdcard/Android/data/com.beatgames.beatsaber/files/mods/libmod-list.so
+if ($debug_so.IsPresent) {
+    & adb push build/debug/libmod-list.so /sdcard/Android/data/com.beatgames.beatsaber/files/mods/libmod-list.so
+} else {
+    & adb push build/libmod-list.so /sdcard/Android/data/com.beatgames.beatsaber/files/mods/libmod-list.so
+}
+
 & adb shell am force-stop com.beatgames.beatsaber
+& adb shell am start com.beatgames.beatsaber/com.unity3d.player.UnityPlayerActivity
+if ($log.IsPresent) {
+    & ./log.ps1
+}
