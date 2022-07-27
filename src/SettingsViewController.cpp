@@ -4,24 +4,16 @@
 #include "library_utils.hpp"
 using namespace ModList;
 
-#include "UnityEngine/Transform.hpp"
 #include "UnityEngine/UI/VerticalLayoutGroup.hpp"
-#include "UnityEngine/UI/HorizontalLayoutGroup.hpp"
 #include "UnityEngine/UI/LayoutElement.hpp"
 #include "UnityEngine/RectOffset.hpp"
 #include "UnityEngine/TextAnchor.hpp"
 using namespace UnityEngine::UI;
 
-#include "TMPro/TextAlignmentOptions.hpp"
-
 #include "questui/shared/BeatSaberUI.hpp"
-#include "questui/shared/CustomTypes/Components/Backgroundable.hpp"
 using namespace QuestUI;
 
-#include "TMPro/TextMeshProUGUI.hpp"
 using namespace TMPro;
-
-#include "modloader/shared/modloader.hpp"
 
 DEFINE_TYPE(ModList, SettingsViewController);
 

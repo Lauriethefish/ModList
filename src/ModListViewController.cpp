@@ -15,7 +15,6 @@ using namespace UnityEngine::UI;
 #include "TMPro/TextAlignmentOptions.hpp"
 
 #include "questui/shared/BeatSaberUI.hpp"
-#include "questui/shared/CustomTypes/Components/Backgroundable.hpp"
 using namespace QuestUI::BeatSaberUI;
 
 #include "TMPro/TextMeshProUGUI.hpp"
@@ -30,7 +29,7 @@ struct ListItem {
 
 DEFINE_TYPE(ModList, ModListViewController);
 
-void CreateListWithTitle(UnityEngine::Transform* parent, std::string title, std::vector<ListItem> content) {
+void CreateListWithTitle(UnityEngine::Transform* parent, std::string title, const std::vector<ListItem>& content) {
     VerticalLayoutGroup* layout = CreateVerticalLayoutGroup(parent);
     layout->set_spacing(0.5);
 
@@ -56,10 +55,10 @@ void CreateListWithTitle(UnityEngine::Transform* parent, std::string title, std:
     listLayout->set_childControlHeight(true);
 
     // Create a line of text for each in the list
-    for(ListItem element : content) {
+    for(const auto& element : content) {
         TMPro::TextMeshProUGUI* text = CreateText(listLayout->get_rectTransform(), element.content);
         // Add a hover hint if there is one
-        if(element.hoverHint != "") {
+        if(!element.hoverHint.empty()) {
             AddHoverHint(text->get_gameObject(), element.hoverHint);
         }
         text->set_fontSize(2.3f);
@@ -103,7 +102,7 @@ void ModListViewController::DidActivate(bool firstActivation, bool addedToHierar
     getLogger().info("Adding loaded mods . . .");
     // Find the list of all loaded mods
     std::vector<ListItem> loadedMods;
-    for(const std::pair<std::string, const Mod>& modEntry : Modloader::getMods()) {
+    for(const auto& modEntry : Modloader::getMods()) {
         const Mod& mod = modEntry.second;
         getLogger().info("Adding mod %s", mod.info.id.c_str());
         ListItem item;

@@ -18,7 +18,6 @@ using namespace GlobalNamespace;
 #include "UnityEngine/Transform.hpp"
 #include "UnityEngine/UI/VerticalLayoutGroup.hpp"
 #include "UnityEngine/UI/HorizontalLayoutGroup.hpp"
-#include "UnityEngine/UI/LayoutElement.hpp"
 #include "UnityEngine/RectOffset.hpp"
 #include "UnityEngine/TextAnchor.hpp"
 using namespace UnityEngine::UI;
@@ -37,7 +36,7 @@ Configuration& getConfig() {
 
 // Returns a logger, useful for printing debug messages
 Logger& getLogger() {
-    static Logger* logger = new Logger(modInfo);
+    static auto* logger = new Logger(modInfo);
     return *logger;
 }
 
@@ -67,7 +66,7 @@ MAKE_HOOK_MATCH(MainMenuViewController_DidActivate, &MainMenuViewController::Did
     }
 
     getLogger().info("%lu mods failed to load", failedMods.size());
-    if(failedMods.size() == 0) {
+    if(failedMods.empty()) {
         getLogger().info("All mods loaded successfully, not showing fail dialog");
         return;
     }

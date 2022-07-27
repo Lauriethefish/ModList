@@ -5,7 +5,7 @@
 #include <sys/types.h>
 #include <dirent.h>
 
-std::optional<std::string> AttemptLoadLibrary(std::string path) {
+std::optional<std::string> AttemptLoadLibrary(const std::string& path) {
     dlerror(); // Clear any preexisting errors
     dlopen(path.c_str(), RTLD_LOCAL | RTLD_NOW); // Attempt to open the SO file
 
@@ -14,7 +14,7 @@ std::optional<std::string> AttemptLoadLibrary(std::string path) {
     return error ? std::optional(std::string(error)) : std::nullopt;
 }
 
-std::unordered_map<std::string, std::optional<std::string>> AttemptLoadLibraries(std::string path) {
+std::unordered_map<std::string, std::optional<std::string>> AttemptLoadLibraries(const std::string& path) {
     getLogger().info("Checking for libraries in path: %s", path.c_str());
     std::unordered_map<std::string, std::optional<std::string>> result;
 
