@@ -104,7 +104,7 @@ MAKE_HOOK_MATCH(MainMenuViewController_DidActivate, &MainMenuViewController::Did
 
     // Add the failed mods to the GUI
     for(std::pair<std::string, std::string> failedMod : failedMods) {
-        TextMeshProUGUI* modText = BeatSaberUI::CreateText(layoutTransform, string_format("<color=red>%s</color>: %s", failedMod.first.c_str(), failedMod.second.c_str()));
+        TextMeshProUGUI* modText = BeatSaberUI::CreateText(layoutTransform, string_format("<color=red>%s</color> didn't load because: \n%s", failedMod.first.c_str(), failedMod.second.c_str()));
         modText->set_overflowMode(TextOverflowModes::Ellipsis);
         modText->set_fontSize(3.5f);
 
