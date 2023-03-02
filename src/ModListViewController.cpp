@@ -14,8 +14,9 @@ using namespace UnityEngine::UI;
 
 #include "TMPro/TextAlignmentOptions.hpp"
 
-#include "questui/shared/BeatSaberUI.hpp"
-using namespace QuestUI::BeatSaberUI;
+#include "bsml-lite/shared/BSML.hpp"
+using namespace BSML::Lite;
+using namespace BSML;
 
 #include "TMPro/TextMeshProUGUI.hpp"
 using namespace TMPro;

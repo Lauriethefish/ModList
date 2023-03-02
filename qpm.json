@@ -26,8 +26,13 @@
       "additionalData": {}
     },
     {
-      "id": "questui",
-      "versionRange": "^0.17.11",
+      "id": "bsml-lite",
+      "versionRange": "^0.0.4",
+      "additionalData": {}
+    },
+    {
+      "id": "bsml",
+      "versionRange": "*",
       "additionalData": {}
     },
     {
